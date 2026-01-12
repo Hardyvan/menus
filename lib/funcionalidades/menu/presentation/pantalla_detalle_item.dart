@@ -39,7 +39,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
-            backgroundColor: AppColors.background,
+            backgroundColor: theme.scaffoldBackgroundColor,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => context.pop(),
@@ -73,7 +73,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           widget.item.name, // Fixed: title -> name
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: AppColors.onBackground,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -81,7 +81,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         'S/ ${widget.item.price.toStringAsFixed(2)}',
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ],
@@ -90,7 +90,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   Text(
                     widget.item.description,
                     style: theme.textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: theme.colorScheme.onSurfaceVariant,
                       height: 1.5,
                     ),
                   ),
@@ -137,7 +137,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Text(
                           '$_quantity',
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
                         ),
                       ),
                       _QuantityButton(
@@ -184,12 +184,12 @@ class _QuantityButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white12),
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.white),
+        icon: Icon(icon, color: Theme.of(context).colorScheme.onSurface),
         onPressed: onPressed,
       ),
     );

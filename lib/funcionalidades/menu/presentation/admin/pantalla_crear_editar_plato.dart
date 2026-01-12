@@ -15,7 +15,7 @@ class CreateEditDishScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isEditing = item != null;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(isEditing ? 'Editar Plato' : 'Nuevo Plato'),
         backgroundColor: Colors.transparent,
@@ -132,15 +132,15 @@ class _DishFormState extends State<_DishForm> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: DropdownButtonFormField<String>(
-                  value: _category,
-                  dropdownColor: AppColors.surface,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Categoría',
-                    border: OutlineInputBorder(),
-                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
-                  ),
+                  child: DropdownButtonFormField<String>(
+                    value: _category,
+                    dropdownColor: theme.cardColor,
+                    style: TextStyle(color: theme.colorScheme.onSurface),
+                    decoration: InputDecoration(
+                      labelText: 'Categoría',
+                      border: const OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: theme.dividerColor)),
+                    ),
                   items: ['Entradas', 'Platos de Fondo', 'Bebidas', 'Postres']
                       .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                       .toList(),
@@ -159,7 +159,7 @@ class _DishFormState extends State<_DishForm> {
           
           // Switch Disponibilidad
           SwitchListTile(
-            title: const Text('Disponible para venta', style: TextStyle(color: Colors.white)),
+            title: Text('Disponible para venta', style: TextStyle(color: theme.colorScheme.onSurface)),
             subtitle: const Text('Desactívalo si se agotan los insumos'),
             value: _isAvailable,
             activeColor: theme.colorScheme.primary,

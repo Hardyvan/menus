@@ -24,7 +24,7 @@ class _BillingScreenState extends State<BillingScreen> {
     final billingRepo = context.watch<BillingRepository>(); // Watch para stats
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Caja y Facturación'),
         backgroundColor: Colors.transparent,
@@ -226,7 +226,7 @@ class _BillingScreenState extends State<BillingScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cobrar: $e'), backgroundColor: Colors.red),
+        SnackBar(content: Text('Error al cobrar: $e'), backgroundColor: Theme.of(context).colorScheme.error),
       );
     } finally {
       if (mounted) setState(() => _processingOrderId = null); // Detener Loading

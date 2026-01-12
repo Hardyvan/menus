@@ -15,7 +15,7 @@ class InventoryScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Inventario y Almacén'),
         backgroundColor: Colors.transparent,
@@ -125,13 +125,13 @@ class InventoryScreen extends StatelessWidget {
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: (isLow ? Colors.red : Colors.green).withValues(alpha: 0.1),
+          color: (isLow ? theme.colorScheme.error : Colors.green).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           isLow ? 'BAJO' : 'NORMAL',
           style: TextStyle(
-            color: isLow ? Colors.red : Colors.green,
+            color: isLow ? theme.colorScheme.error : Colors.green,
             fontSize: 12,
             fontWeight: FontWeight.bold,
           ),

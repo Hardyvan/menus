@@ -18,7 +18,7 @@ class CashFlowScreen extends StatelessWidget {
     final financeRepo = context.read<FinanceRepository>();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Flujo de Caja'),
         backgroundColor: Colors.transparent,
@@ -91,7 +91,7 @@ class CashFlowScreen extends StatelessWidget {
                         title: 'Beneficio Neto',
                         value: 'S/ ${(incomeToday - dummyStats.expenseToday).toStringAsFixed(2)}', // Calculado
                         icon: Icons.account_balance_wallet,
-                        color: AppColors.primary,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -114,7 +114,7 @@ class CashFlowScreen extends StatelessWidget {
                   width: double.infinity,
                   child: AppDataTable(
                     columns: const ['Mesa', 'Estado', 'Monto', 'Hora'],
-                    rows: pedidos.map((p) => _buildPedidoRow(p)).toList(),
+                    rows: pedidos.map((p) => _buildPedidoRow(context, p)).toList(),
                     emptyState: _buildEmptyState(context),
                   ),
                 ),
@@ -198,15 +198,15 @@ class CashFlowScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildPedidoRow(Pedido p) {
+  List<Widget> _buildPedidoRow(BuildContext context, Pedido p) {
     return [
-      Text(p.tableNumber, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      Text(p.status.name.toUpperCase(), style: const TextStyle(color: AppColors.textSecondary)),
+      Text(p.tableNumber, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold)),
+      Text(p.status.name.toUpperCase(), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
       Text(
         'S/ ${p.total.toStringAsFixed(2)}', 
         style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green)
       ),
-      Text(DateFormat('hh:mm a').format(p.timestamp), style: const TextStyle(color: AppColors.textSecondary)),
+      Text(DateFormat('hh:mm a').format(p.timestamp), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
     ];
   }
 
@@ -216,11 +216,11 @@ class CashFlowScreen extends StatelessWidget {
       alignment: Alignment.center,
       child: Column(
         children: [
-          Icon(Icons.account_balance_wallet_outlined, size: 40, color: AppColors.textSecondary.withValues(alpha: 0.5)),
+          Icon(Icons.account_balance_wallet_outlined, size: 40, color: Theme.of(context).disabledColor),
           const SizedBox(height: 12),
-          const Text(
+           Text(
             'Sin movimientos hoy',
-            style: TextStyle(color: AppColors.textSecondary),
+            style: TextStyle(color: Theme.of(context).disabledColor),
           ),
         ],
       ),

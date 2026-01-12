@@ -156,7 +156,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     // Mostrar error si existe (ej. duplicado)
                     if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+                            SnackBar(content: Text('Error: $e'), backgroundColor: Theme.of(context).colorScheme.error),
                         );
                     }
                   }
@@ -280,7 +280,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                             bottom: 0, right: 0,
                             child: Container(
                               padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                              decoration: BoxDecoration(color: theme.colorScheme.error, shape: BoxShape.circle),
                               child: const Icon(Icons.block, color: Colors.white, size: 10),
                             ),
                           ),
@@ -290,9 +290,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${user.roleName} • ${user.email}'),
+                          Text('${user.roleName} • ${user.email}'),
                         if (!user.isActive)
-                           Text('Inactivo', style: TextStyle(color: Colors.red[300], fontSize: 12)),
+                           Text('Inactivo', style: TextStyle(color: theme.colorScheme.error, fontSize: 12)),
                       ],
                     ),
                     trailing: Row(

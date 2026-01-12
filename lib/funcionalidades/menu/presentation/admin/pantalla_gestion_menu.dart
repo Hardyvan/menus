@@ -29,7 +29,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
     // o simplemente confiaremos en que al volver a cargar el Future se vean los cambios.
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Gestión del Menú'),
         backgroundColor: Colors.transparent,
@@ -147,15 +147,15 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
               errorWidget: (_,__,___) => const Icon(Icons.broken_image),
             ),
           ),
-          title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(item.name, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('S/ ${item.price.toStringAsFixed(2)} - ${item.category}'),
+              Text('S/ ${item.price.toStringAsFixed(2)} - ${item.category}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
               Text(
                 item.isAvailable ? 'Disponible' : 'Agotado',
                 style: TextStyle(
-                  color: item.isAvailable ? Colors.green : Colors.red,
+                  color: item.isAvailable ? theme.colorScheme.primary : theme.colorScheme.error,
                   fontSize: 12,
                 ),
               ),

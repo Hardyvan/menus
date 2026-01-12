@@ -57,7 +57,7 @@ class AdminDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.restaurant_menu, color: Theme.of(context).iconTheme.color),
             title: const Text('Gestión de Menú (Platos)'),
-            onTap: () => context.push('/admin/menu'),
+            onTap: () => context.go('/admin/menu'),
           ),
 
           const Divider(color: Colors.grey),
@@ -69,27 +69,27 @@ class AdminDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.soup_kitchen, color: Theme.of(context).iconTheme.color),
             title: const Text('Cocina (KDS)'),
-            onTap: () => context.push('/kitchen'),
+            onTap: () => context.go('/kitchen'),
           ),
           ListTile(
             leading: Icon(Icons.inventory_2, color: Theme.of(context).iconTheme.color),
             title: const Text('Inventario & Almacén'),
-            onTap: () => context.push('/admin/inventory'),
+            onTap: () => context.go('/admin/inventory'),
           ),
           ListTile(
             leading: Icon(Icons.receipt_long, color: Theme.of(context).iconTheme.color),
             title: const Text('Facturación'),
-            onTap: () => context.push('/admin/billing'),
+            onTap: () => context.go('/admin/billing'),
           ),
           ListTile(
             leading: Icon(Icons.analytics, color: Theme.of(context).iconTheme.color),
             title: const Text('Finanzas & Caja'),
-            onTap: () => context.push('/admin/finance'),
+            onTap: () => context.go('/admin/finance'),
           ),
           ListTile(
             leading: Icon(Icons.people, color: Theme.of(context).iconTheme.color),
             title: const Text('Personal & Usuarios'),
-            onTap: () => context.push('/admin/users'),
+            onTap: () => context.go('/admin/users'),
           ),
         ],
       ),

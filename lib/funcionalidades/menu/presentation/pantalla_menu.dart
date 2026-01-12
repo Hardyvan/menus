@@ -36,7 +36,7 @@ class _MenuScreenState extends State<MenuScreen> {
     final isAdmin = context.watch<AuthProvider>().currentUser?.canEditMenu ?? false;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 🎨 Dynamic Background
       drawer: isAdmin ? const AdminDrawer() : null, // 🍔 Menú Lateral (Solo Admin)
       body: SafeArea(
         child: Column(
@@ -49,34 +49,14 @@ class _MenuScreenState extends State<MenuScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Bienvenido,',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        Text(
-                          '¿Qué se te antoja hoy?',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.onBackground,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   Builder(
                     builder: (context) {
                       return IconButton(
                         icon: CircleAvatar(
-                          backgroundColor: AppColors.surface,
+                          backgroundColor: Theme.of(context).cardColor, // Dynamic Surface
                           child: Icon(
                             isAdmin ? Icons.menu : Icons.person, // 🍔 vs 👤
-                            color: AppColors.primary
+                            color: Theme.of(context).colorScheme.primary // Dynamic Primary
                           ),
                         ),
                         onPressed: () {
@@ -88,6 +68,27 @@ class _MenuScreenState extends State<MenuScreen> {
                         },
                       );
                     }
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Bienvenido,',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant, // Dynamic Text
+                          ),
+                        ),
+                        Text(
+                          '¿Qué se te antoja hoy?',
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface, // Dynamic Text
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -104,17 +105,17 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: AppColors.surface,
+                    color: Theme.of(context).cardColor, // Dynamic Surface
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                    border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)), // Dynamic Border
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.search, color: AppColors.textSecondary),
+                      Icon(Icons.search, color: Theme.of(context).hintColor), // Dynamic Icon
                       const SizedBox(width: 12),
                       Text(
                         'Buscar platos, bebidas...',
-                        style: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.7)),
+                        style: TextStyle(color: Theme.of(context).hintColor), // Dynamic Hint
                       ),
                     ],
                   ),
@@ -219,7 +220,7 @@ class _MenuItemCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).cardColor, // Dynamic Surface
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -295,7 +296,7 @@ class _MenuItemCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface, // Dynamic Text
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -304,7 +305,7 @@ class _MenuItemCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant, // Dynamic Text
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -315,16 +316,16 @@ class _MenuItemCard extends StatelessWidget {
                         'S/ ${item.price.toStringAsFixed(2)}',
                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary, // Dynamic Price
                         ),
                       ),
                       Container(
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary, // Dynamic Button
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: const Icon(Icons.add, color: Colors.white, size: 20),
+                          icon: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary, size: 20),
                           constraints: const BoxConstraints(),
                           padding: const EdgeInsets.all(4),
                           onPressed: item.isAvailable ? () {
@@ -334,7 +335,7 @@ class _MenuItemCard extends StatelessWidget {
                                 content: Text('${item.name} añadido al carrito'),
                                 duration: const Duration(seconds: 1),
                                 behavior: SnackBarBehavior.floating,
-                                backgroundColor: AppColors.surface,
+                                backgroundColor: Theme.of(context).colorScheme.surface,
                               ),
                             );
                           } : null,
