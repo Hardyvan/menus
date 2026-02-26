@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:interfaz_usuario/interfaz_usuario.dart';
-import 'package:intl/intl.dart';
 import 'package:menus/funcionalidades/pedidos/domain/repositories/repositorio_pedido.dart';
 import 'package:menus/funcionalidades/pedidos/domain/models/pedido.dart';
 import '../domain/models/modelos_finanzas.dart';
@@ -23,7 +21,7 @@ class CashFlowScreen extends StatelessWidget {
         title: const Text('Flujo de Caja'),
         backgroundColor: Colors.transparent,
       ),
-      drawer: const AdminDrawer(),
+      drawer: const Drawer(),
       // 🚀 CARGA PARALELA (Future.wait)
       // Aquí hacemos DOS llamadas al mismo tiempo:
       // 1. Traer Pedidos (para calcular ingresos)
@@ -62,23 +60,24 @@ class CashFlowScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: StatCard(
+                      child: _buildSummaryCard(
+                        context: context,
                         title: 'Ingresos Hoy',
-                        value: 'S/ ${incomeToday.toStringAsFixed(2)}', // Calculado
+                        value: 'S/ ${incomeToday.toStringAsFixed(2)}',
                         icon: Icons.trending_up,
                         color: Colors.green,
-                        trend: 'En Vivo',
+                        subtitle: 'En Vivo',
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: StatCard(
+                      child: _buildSummaryCard(
+                        context: context,
                         title: 'Gastos Hoy',
                         value: 'S/ ${dummyStats.expenseToday.toStringAsFixed(2)}',
                         icon: Icons.trending_down,
                         color: Colors.red,
-                        trend: '(Simulado)',
-                        trendUp: true, 
+                        subtitle: '(Simulado)',
                       ),
                     ),
                   ],
@@ -87,16 +86,18 @@ class CashFlowScreen extends StatelessWidget {
                  Row(
                   children: [
                     Expanded(
-                      child: StatCard(
+                      child: _buildSummaryCard(
+                        context: context,
                         title: 'Beneficio Neto',
-                        value: 'S/ ${(incomeToday - dummyStats.expenseToday).toStringAsFixed(2)}', // Calculado
+                        value: 'S/ ${(incomeToday - dummyStats.expenseToday).toStringAsFixed(2)}',
                         icon: Icons.account_balance_wallet,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: StatCard(
+                      child: _buildSummaryCard(
+                        context: context,
                         title: 'Pedidos',
                         value: '${pedidos.length}',
                         icon: Icons.receipt,
@@ -112,10 +113,10 @@ class CashFlowScreen extends StatelessWidget {
 
                 SizedBox(
                   width: double.infinity,
-                  child: AppDataTable(
-                    columns: const ['Mesa', 'Estado', 'Monto', 'Hora'],
-                    rows: pedidos.map((p) => _buildPedidoRow(context, p)).toList(),
-                    emptyState: _buildEmptyState(context),
+                  child: Container(
+                    // columns:const ['Mesa', 'Estado', 'Monto', 'Hora'],
+                    // rows:pedidos.map((p) => _buildPedidoRow(context, p)).toList(),
+                    child: _buildEmptyState(context),
                   ),
                 ),
                 
@@ -139,6 +140,55 @@ class CashFlowScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard({
+    required BuildContext context,
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color color,
+    String? subtitle,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: color, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+          ),
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+          ]
+        ],
       ),
     );
   }
@@ -196,18 +246,6 @@ class CashFlowScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  List<Widget> _buildPedidoRow(BuildContext context, Pedido p) {
-    return [
-      Text(p.tableNumber, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold)),
-      Text(p.status.name.toUpperCase(), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-      Text(
-        'S/ ${p.total.toStringAsFixed(2)}', 
-        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green)
-      ),
-      Text(DateFormat('hh:mm a').format(p.timestamp), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-    ];
   }
 
   Widget _buildEmptyState(BuildContext context) {

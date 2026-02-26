@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interfaz_usuario/interfaz_usuario.dart';
-import '../../configuracion/presentation/proveedor_tema.dart';
 import '../../autenticacion/application/proveedor_autenticacion.dart';
 import '../../carrito/application/proveedor_carrito.dart';
 
@@ -13,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final userTheme = context.watch<ThemeProvider>();
+    final userTheme = context.watch<ProveedorTema>();
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.currentUser;
 
@@ -92,8 +91,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 32),
             
             // 2. Theme Section (With Visual Feedback)
-            SectionHeader(title: 'Apariencia', icon: Icons.palette),
-            AppCard(
+            TarjetaPremium(
               padding: EdgeInsets.zero,
               child: Column(
                 children: [
@@ -101,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                      icon: Icons.color_lens,
                      iconColor: theme.colorScheme.secondary,
                      title: 'Tema de la Aplicación',
-                     subtitle: userTheme.currentConfig.name,
+                     subtitle: userTheme.modoTema == ThemeMode.dark ? 'Oscuro' : 'Claro',
                      trailing: Container(
                        width: 16, height: 16,
                        decoration: BoxDecoration(
@@ -119,8 +117,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 24),
             
             // 3. Account Section (Secure Logout)
-            SectionHeader(title: 'Cuenta', icon: Icons.person),
-            AppCard(
+            TarjetaPremium(
               padding: EdgeInsets.zero,
               child: Column(
                 children: [
@@ -156,14 +153,47 @@ class ProfileScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
-        final provider = context.read<ThemeProvider>();
-        return ThemeSelectorModal(
-          currentThemeId: provider.currentConfig.id,
-          availableThemes: provider.availablePalettes,
-          onThemeSelected: (config) {
-            provider.setTheme(config);
-            Navigator.pop(ctx);
-          },
+        final provider = context.read<ProveedorTema>();
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Seleccionar Tema', style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 12,
+                children: [
+                   GestureDetector(
+                     onTap: () {
+                       provider.cambiarTema(false);
+                       Navigator.pop(ctx);
+                     },
+                     child: CircleAvatar(
+                       backgroundColor: Colors.grey.shade300, 
+                       radius: 20, 
+                       child: provider.modoTema != ThemeMode.dark ? const Icon(Icons.check, color: Colors.black, size: 16) : null
+                     )
+                   ),
+                   GestureDetector(
+                     onTap: () {
+                       provider.cambiarTema(true);
+                       Navigator.pop(ctx);
+                     },
+                     child: CircleAvatar(
+                       backgroundColor: Colors.grey.shade900, 
+                       radius: 20, 
+                       child: provider.modoTema == ThemeMode.dark ? const Icon(Icons.check, color: Colors.white, size: 16) : null
+                     )
+                   ),
+                ],
+              )
+            ],
+          )
         );
       },
     );
@@ -181,7 +211,7 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(ctx),
             child: const Text('Cancelar'),
           ),
-          AppButton(
+          BotonGradiente(
             text: 'Salir',
             onPressed: () {
               // 1. Limpiar estado

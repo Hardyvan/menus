@@ -40,7 +40,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
           )
         ],
       ),
-      drawer: const AdminDrawer(),
+      drawer: const Drawer(),
       body: Column(
         children: [
           // 1. Barra de Búsqueda y Acción
@@ -49,7 +49,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: AppTextInput(
+                  child: CampoTextoPersonalizado(
                     label: 'Buscar plato...',
                     prefixIcon: Icons.search,
                     onChanged: (val) {
@@ -133,7 +133,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${item.name} eliminado')));
         }
       },
-      child: AppCard(
+      child: TarjetaPremium(
         child: ListTile(
           contentPadding: const EdgeInsets.all(8),
           leading: ClipRRect(
@@ -167,7 +167,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
               // ⚡ SWITCH DE DISPONIBILIDAD
               Switch(
                 value: item.isAvailable, 
-                activeColor: theme.colorScheme.primary,
+                activeThumbColor: theme.colorScheme.primary,
                 onChanged: (val) async {
                   await repo.updateAvailability(item.id, val);
                   setState(() {}); // Refrescar UI inmediatamente

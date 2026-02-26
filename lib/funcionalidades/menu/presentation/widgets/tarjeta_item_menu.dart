@@ -15,7 +15,7 @@ class MenuItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap ?? () => context.push('/item', extra: item),
-      child: AppCard( // Usamos AppCard del paquete UI
+      child: TarjetaPremium( // Usamos AppCard del paquete UI
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

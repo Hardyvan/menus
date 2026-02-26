@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:interfaz_usuario/interfaz_usuario.dart';
 // Importamos el CartProvider para escuchar cambios en el carrito
 import '../carrito/application/proveedor_carrito.dart';
 import '../menu/presentation/pantalla_menu.dart';
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
-        drawer: const AdminDrawer(), // 🔐 Idealmente restringir por rol
+        drawer: const Drawer(), // 🔐 Idealmente restringir por rol
         
         // ⚡ OPTIMIZACIÓN DE MEMORIA (IndexedStack)
         // Mantiene vivas todas las pantallas. Si scrolleas en el Menú y vas al Perfil,
@@ -92,12 +91,17 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : null,
             
-        bottomNavigationBar: AppBottomNav(
-          currentIndex: _currentIndex,
-          cartCount: cart.items.length, // 🔴 Badge Count
-          onTap: (index) {
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (index) {
             setState(() => _currentIndex = index);
           },
+          destinations: const [
+            NavigationDestination(icon: Icon(Icons.restaurant_menu), label: 'Menú'),
+            NavigationDestination(icon: Icon(Icons.search), label: 'Buscar'),
+            NavigationDestination(icon: Icon(Icons.shopping_cart), label: 'Carrito'),
+            NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
+          ],
         ),
       ),
     );

@@ -3,12 +3,11 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:interfaz_usuario/interfaz_usuario.dart';
 import '../../autenticacion/application/proveedor_autenticacion.dart';
+import '../../carrito/application/proveedor_carrito.dart';
 
 import '../domain/models/item_menu.dart';
 import '../domain/repositories/repositorio_menu.dart';
-import '../../carrito/application/proveedor_carrito.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -37,7 +36,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 🎨 Dynamic Background
-      drawer: isAdmin ? const AdminDrawer() : null, // 🍔 Menú Lateral (Solo Admin)
+      drawer: isAdmin ? const Drawer() : null, // 🍔 Menú Lateral (Solo Admin)
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,15 +133,44 @@ class _MenuScreenState extends State<MenuScreen> {
                 itemBuilder: (context, index) {
                   final category = _categories[index];
                   final isSelected = category == _selectedCategory;
-                  return CategoryAvatar(
-                    label: category,
-                    icon: _categoryIcons[category] ?? Icons.fastfood, // icon provided
-                    isSelected: isSelected,
+                  return GestureDetector(
                     onTap: () {
                       setState(() {
                         _selectedCategory = category;
                       });
                     },
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected 
+                            ? Theme.of(context).colorScheme.primary 
+                            : Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            _categoryIcons[category] ?? Icons.fastfood,
+                            color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            category,
+                            style: TextStyle(
+                              color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),

@@ -123,11 +123,10 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                   AppTextInput(
+                   CampoTextoPersonalizado(
                     controller: _searchController,
                     label: 'Buscar platos, bebidas, postres...',
                     prefixIcon: Icons.search,
-                    backgroundColor: theme.cardColor,
                   ),
                   const SizedBox(height: 16),
                   
@@ -169,70 +168,74 @@ class _SearchScreenState extends State<SearchScreen> {
                 : _filteredItems.isEmpty 
                   ? _buildEmptyState(theme)
                   : AnimationLimiter(
-                      child: ResponsiveLayoutBuilder(
-                        // 📱 MÓVIL: Lista Vertical
-                        mobile: ListView.separated(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _filteredItems.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 16),
-                          itemBuilder: (context, index) {
-                            return AnimationConfiguration.staggeredList(
-                              position: index,
-                              duration: const Duration(milliseconds: 375),
-                              child: SlideAnimation(
-                                verticalOffset: 50.0,
-                                child: FadeInAnimation(
-                                  child: MenuItemCard(item: _filteredItems[index]),
-                                ),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth >= 900) {
+                            return GridView.builder(
+                              padding: const EdgeInsets.all(16),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 0.8,
                               ),
+                              itemCount: _filteredItems.length,
+                              itemBuilder: (context, index) {
+                                return AnimationConfiguration.staggeredGrid(
+                                  position: index,
+                                  columnCount: 3,
+                                  duration: const Duration(milliseconds: 375),
+                                  child: ScaleAnimation(
+                                    child: FadeInAnimation(
+                                      child: MenuItemCard(item: _filteredItems[index]),
+                                    ),
+                                  ),
+                                );
+                              },
                             );
-                          },
-                        ),
-                        // 💻 TABLET/DESKTOP: Grid
-                        tablet: GridView.builder(
-                          padding: const EdgeInsets.all(16),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, // 2 columnas en tablet
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.8, // Ajuste para tarjetas
-                          ),
-                          itemCount: _filteredItems.length,
-                          itemBuilder: (context, index) {
-                            return AnimationConfiguration.staggeredGrid(
-                              position: index,
-                              columnCount: 2,
-                              duration: const Duration(milliseconds: 375),
-                              child: ScaleAnimation(
-                                child: FadeInAnimation(
-                                  child: MenuItemCard(item: _filteredItems[index]),
-                                ),
+                          } else if (constraints.maxWidth >= 600) {
+                            return GridView.builder(
+                              padding: const EdgeInsets.all(16),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 0.8,
                               ),
+                              itemCount: _filteredItems.length,
+                              itemBuilder: (context, index) {
+                                return AnimationConfiguration.staggeredGrid(
+                                  position: index,
+                                  columnCount: 2,
+                                  duration: const Duration(milliseconds: 375),
+                                  child: ScaleAnimation(
+                                    child: FadeInAnimation(
+                                      child: MenuItemCard(item: _filteredItems[index]),
+                                    ),
+                                  ),
+                                );
+                              },
                             );
-                          },
-                        ),
-                        desktop: GridView.builder(
-                          padding: const EdgeInsets.all(16),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, // 3 columnas en desktop
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.8,
-                          ),
-                          itemCount: _filteredItems.length,
-                          itemBuilder: (context, index) {
-                            return AnimationConfiguration.staggeredGrid(
-                              position: index,
-                              columnCount: 3,
-                              duration: const Duration(milliseconds: 375),
-                              child: ScaleAnimation(
-                                child: FadeInAnimation(
-                                  child: MenuItemCard(item: _filteredItems[index]),
-                                ),
-                              ),
+                          } else {
+                            return ListView.separated(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              itemCount: _filteredItems.length,
+                              separatorBuilder: (_, __) => const SizedBox(height: 16),
+                              itemBuilder: (context, index) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: 375),
+                                  child: SlideAnimation(
+                                    verticalOffset: 50.0,
+                                    child: FadeInAnimation(
+                                      child: MenuItemCard(item: _filteredItems[index]),
+                                    ),
+                                  ),
+                                );
+                              },
                             );
-                          },
-                        ),
+                          }
+                        },
                       ),
                     ),
             ),
@@ -265,7 +268,7 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 24),
           SizedBox(
             width: 150,
-            child: AppButton(
+            child: BotonGradiente(
               text: 'VER TODO',
               onPressed: () {
                 _searchController.clear();

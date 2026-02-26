@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:menus/funcionalidades/carrito/application/proveedor_carrito.dart';
 import 'package:menus/rutas/enrutador_app.dart';
-import 'package:menus/funcionalidades/configuracion/presentation/proveedor_tema.dart';
+import 'package:interfaz_usuario/interfaz_usuario.dart';
 import 'package:menus/funcionalidades/menu/domain/repositories/repositorio_menu.dart';
 import 'package:menus/funcionalidades/menu/data/repositories/mock_repositorio_menu.dart';
 import 'package:menus/core/red/cliente_dio.dart';
@@ -26,17 +26,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 2. Pre-Carga del Tema (Evita el "flashbang" blanco)
-  final themeProvider = ThemeProvider();
-  await themeProvider.loadTheme();
+  final proveedorTema = ProveedorTema();
+  // await proveedorTema.loadTheme(); // Depende si existe en la nueva version
 
   // 3. Inflamos la aplicación con el tema ya cargado
-  runApp(RestaurantApp(themeProvider: themeProvider));
+  runApp(RestaurantApp(proveedorTema: proveedorTema));
 }
 
 class RestaurantApp extends StatelessWidget {
-  const RestaurantApp({super.key, required this.themeProvider});
+  const RestaurantApp({super.key, required this.proveedorTema});
 
-  final ThemeProvider themeProvider;
+  final ProveedorTema proveedorTema;
 
   @override
   Widget build(BuildContext context) {
@@ -62,16 +62,16 @@ class RestaurantApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()), // Estado del Carrito
         ChangeNotifierProvider(create: (ctx) => InventoryProvider(ctx.read<InventoryRepository>())), // 📦 Inventario
         
-        // Usamos .value porque ya instanciamos el ThemeProvider en main()
-        ChangeNotifierProvider.value(value: themeProvider), 
+        // Usamos .value porque ya instanciamos el ProveedorTema en main()
+        ChangeNotifierProvider.value(value: proveedorTema), 
       ],
       // 🎨 CONSUMER: Escuchamos cambios en el Tema para repintar la app completa
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
+      child: Consumer<ProveedorTema>(
+        builder: (context, refProveedorTema, child) {
           return MaterialApp.router(
             title: 'Restaurant App',
             debugShowCheckedModeBanner: false,
-            theme: themeProvider.themeData, // ¡Aquí el tema cambia dinámicamente!
+            theme: TemaApp.obtenerTema(refProveedorTema.configActual), // ¡Aquí el tema cambia dinámicamente!
             routerConfig: appRouter, // Nuestro mapa de navegación
           );
         },

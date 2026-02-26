@@ -32,7 +32,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     final cart = context.read<CartProvider>();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ColoresApp.fondo,
       body: CustomScrollView(
         slivers: [
           // 1. Imagen Grande con botón de regreso
@@ -118,7 +118,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   const SizedBox(height: 16),
                   
                   // Controles de notas y cantidad
-                  AppTextInput(
+                  CampoTextoPersonalizado(
                     label: 'Notas adicionales (sin cebolla, picante...)',
                     controller: _notesCtrl,
                     maxLines: 2,
@@ -151,7 +151,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   // Botón Agregar
                   SizedBox(
                     width: double.infinity,
-                    child: AppButton(
+                    child: BotonGradiente(
                       text: widget.item.isAvailable ? 'AGREGAR AL PEDIDO' : 'NO DISPONIBLE',
                       icon: Icons.add_shopping_cart,
                       onPressed: widget.item.isAvailable ? () {

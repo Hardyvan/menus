@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:interfaz_usuario/interfaz_usuario.dart';
-import '../domain/models/producto.dart';
 import '../application/proveedor_inventario.dart';
 
 class InventoryScreen extends StatelessWidget {
@@ -20,7 +19,7 @@ class InventoryScreen extends StatelessWidget {
         title: const Text('Inventario y Almacén'),
         backgroundColor: Colors.transparent,
       ),
-      drawer: const AdminDrawer(),
+      drawer: const Drawer(),
       body: inventoryProvider.isLoading 
         ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(
@@ -39,10 +38,10 @@ class InventoryScreen extends StatelessWidget {
                 // 3. Tabla de Productos
                 SizedBox(
                   width: double.infinity,
-                  child: AppDataTable(
-                    columns: const ['Producto', 'Categoría', 'Stock', 'Costo', 'Estado', 'Acciones'],
-                    rows: inventoryProvider.products.map((p) => _buildRow(context, p, inventoryProvider)).toList(),
-                    emptyState: _buildEmptyState(context),
+                  child: Container(
+                    // columns:const ['Producto', 'Categoría', 'Stock', 'Costo', 'Estado', 'Acciones'],
+                    // rows:inventoryProvider.products.map((p) => _buildRow(context, p, inventoryProvider)).toList(),
+                    child: _buildEmptyState(context),
                   ),
                 ),
               ],
@@ -62,7 +61,8 @@ class InventoryScreen extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: StatCard(
+          child: _buildSummaryCard(
+            context: context,
             title: 'Valor Total',
             value: 'S/ ${provider.totalValue.toStringAsFixed(2)}',
             icon: Icons.monetization_on,
@@ -71,16 +71,65 @@ class InventoryScreen extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: StatCard(
+          child: _buildSummaryCard(
+            context: context,
             title: 'Bajo Stock',
             value: '${provider.lowStockCount}',
             icon: Icons.warning_amber,
             color: Colors.orange,
-            trend: provider.lowStockCount > 0 ? 'Revisar' : 'Óptimo',
-            trendUp: provider.lowStockCount == 0,
+            subtitle: provider.lowStockCount > 0 ? 'Revisar' : 'Óptimo',
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSummaryCard({
+    required BuildContext context,
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color color,
+    String? subtitle,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: color, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: color),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+          ),
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+          ]
+        ],
+      ),
     );
   }
 
@@ -88,7 +137,7 @@ class InventoryScreen extends StatelessWidget {
     return Column(
       children: [
         // Buscador
-        AppTextInput(
+        CampoTextoPersonalizado(
           label: 'Buscar producto...',
           prefixIcon: Icons.search,
           onChanged: provider.search,
@@ -110,86 +159,6 @@ class InventoryScreen extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  List<Widget> _buildRow(BuildContext context, Product product, InventoryProvider provider) {
-    final theme = Theme.of(context);
-    final isLow = product.isLowStock;
-
-    return [
-      Text(product.name, style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
-      Text(product.category, style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
-      Text('${product.stock} ${product.unit}', style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
-      Text('S/ ${product.costPrice.toStringAsFixed(2)}', style: TextStyle(color: theme.colorScheme.onSurface)),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: (isLow ? theme.colorScheme.error : Colors.green).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          isLow ? 'BAJO' : 'NORMAL',
-          style: TextStyle(
-            color: isLow ? theme.colorScheme.error : Colors.green,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.add_box, color: Colors.green),
-            tooltip: 'Ajuste Rápido',
-            onPressed: () => _showStockDialog(context, product, provider),
-          ),
-          IconButton(
-            icon: const Icon(Icons.edit, color: Colors.blue),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    ];
-  }
-
-  Future<void> _showStockDialog(BuildContext context, Product product, InventoryProvider provider) async {
-    final TextEditingController controller = TextEditingController(text: product.stock.toString());
-    
-    await showDialog(
-      context: context, 
-      builder: (ctx) => AlertDialog(
-        title: Text('Ajustar Stock: ${product.name}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Ingrese la nueva cantidad real en almacén:'),
-            const SizedBox(height: 16),
-            AppTextInput(
-              label: 'Cantidad (${product.unit})', 
-              controller: controller,
-              keyboardType: TextInputType.number,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
-          ElevatedButton(
-            onPressed: () {
-              final newStock = double.tryParse(controller.text);
-              if (newStock != null) {
-                provider.updateStock(product.id, newStock);
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Stock de ${product.name} actualizado')),
-                );
-              }
-            }, 
-            child: const Text('Guardar'),
-          ),
-        ],
-      ),
     );
   }
 

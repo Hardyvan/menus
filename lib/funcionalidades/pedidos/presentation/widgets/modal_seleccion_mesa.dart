@@ -137,7 +137,7 @@ class _TableSelectionModalState extends State<TableSelectionModal> {
           
           SizedBox(
             width: double.infinity,
-            child: AppButton(
+            child: BotonGradiente(
               text: 'Confirmar',
               onPressed: _selectedTable != null 
                 ? () => widget.onTableSelected(_selectedTable!) 

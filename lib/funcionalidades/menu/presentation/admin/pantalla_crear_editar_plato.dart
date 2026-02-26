@@ -107,14 +107,16 @@ class _DishFormState extends State<_DishForm> {
           ),
           const SizedBox(height: 24),
 
-          AppTextInput(
+          CampoTextoPersonalizado(
             label: 'Nombre del Plato',
+            prefixIcon: Icons.restaurant,
             controller: _nameCtrl,
             validator: (v) => v!.isEmpty ? 'Requerido' : null,
           ),
           const SizedBox(height: 16),
-          AppTextInput(
+          CampoTextoPersonalizado(
             label: 'Descripción',
+            prefixIcon: Icons.description,
             controller: _descCtrl,
             maxLines: 3,
             validator: (v) => v!.isEmpty ? 'Requerido' : null,
@@ -123,8 +125,9 @@ class _DishFormState extends State<_DishForm> {
           Row(
             children: [
               Expanded(
-                child: AppTextInput(
+                child: CampoTextoPersonalizado(
                   label: 'Precio (S/)',
+                  prefixIcon: Icons.attach_money,
                   controller: _priceCtrl,
                   keyboardType: TextInputType.number,
                   validator: (v) => double.tryParse(v!) == null ? 'Inválido' : null,
@@ -133,7 +136,7 @@ class _DishFormState extends State<_DishForm> {
               const SizedBox(width: 16),
               Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _category,
+                    initialValue: _category,
                     dropdownColor: theme.cardColor,
                     style: TextStyle(color: theme.colorScheme.onSurface),
                     decoration: InputDecoration(
@@ -150,8 +153,9 @@ class _DishFormState extends State<_DishForm> {
             ],
           ),
           const SizedBox(height: 16),
-          AppTextInput(
+          CampoTextoPersonalizado(
             label: 'URL de Imagen',
+            prefixIcon: Icons.link,
             controller: _imageCtrl,
              validator: (v) => v!.isEmpty ? 'Requerido' : null,
           ),
@@ -162,12 +166,12 @@ class _DishFormState extends State<_DishForm> {
             title: Text('Disponible para venta', style: TextStyle(color: theme.colorScheme.onSurface)),
             subtitle: const Text('Desactívalo si se agotan los insumos'),
             value: _isAvailable,
-            activeColor: theme.colorScheme.primary,
+            activeThumbColor: theme.colorScheme.primary,
             onChanged: (val) => setState(() => _isAvailable = val),
           ),
           
           const SizedBox(height: 32),
-          AppButton(
+          BotonGradiente(
             text: 'GUARDAR PLATO',
             icon: Icons.save,
             onPressed: _saveDish,

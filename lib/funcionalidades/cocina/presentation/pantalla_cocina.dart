@@ -168,7 +168,7 @@ class _LiveOrderCardState extends State<_LiveOrderCard> {
       statusColor = Colors.orange; // Cocinando
     }
 
-    return AppCard(
+    return TarjetaPremium(
       padding: EdgeInsets.zero,
       child: Column(
         children: [

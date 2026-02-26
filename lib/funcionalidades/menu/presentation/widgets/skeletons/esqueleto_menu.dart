@@ -7,13 +7,12 @@ class MenuSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
+    return TarjetaPremium(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      child: AppShimmer(
-        child: Row(
+      child: Row(
           children: [
             // Imagen Placeholder
-            AppShimmer.rect(width: 50, height: 50, borderRadius: 8),
+            Container(width: 50, height: 50, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8))),
             const SizedBox(width: 12),
             
             // Textos
@@ -21,19 +20,18 @@ class MenuSkeleton extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   AppShimmer.rect(width: 120, height: 16),
+                   Container(width: 120, height: 16, decoration: BoxDecoration(color: Colors.grey[300])),
                    const SizedBox(height: 8),
-                   AppShimmer.rect(width: 200, height: 12),
+                   Container(width: 200, height: 12, decoration: BoxDecoration(color: Colors.grey[300])),
                 ],
               ),
             ),
             
             // Precio
             const SizedBox(width: 12),
-            AppShimmer.rect(width: 60, height: 30, borderRadius: 15),
+            Container(width: 60, height: 30, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(15))),
           ],
         ),
-      ),
     );
   }
 }

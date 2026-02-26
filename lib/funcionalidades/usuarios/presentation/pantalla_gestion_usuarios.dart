@@ -70,14 +70,14 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AppTextInput(
+                  CampoTextoPersonalizado(
                     label: 'Nombre Completo',
                     controller: nameController,
                     prefixIcon: Icons.person,
                     validator: (v) => v!.isEmpty ? 'Ingresa un nombre' : null,
                   ),
                   const SizedBox(height: 16),
-                  AppTextInput(
+                  CampoTextoPersonalizado(
                     label: 'Correo Electrónico',
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -92,7 +92,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   
                   // Selector de Rol
                   DropdownButtonFormField<UserRole>(
-                    value: selectedRole,
+                    initialValue: selectedRole,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Theme.of(context).cardColor,
@@ -113,7 +113,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     SwitchListTile(
                       //inactiveTrackColor: Colors.red.withOpacity(0.2), // Deprecated
                       inactiveTrackColor: Colors.red.withValues(alpha: 0.2), 
-                      activeColor: Colors.green,
+                      activeThumbColor: Colors.green,
                       title: const Text('Estado Activo'),
                       subtitle: Text(isActive ? 'El usuario puede acceder' : 'Acceso denegado'),
                       value: isActive,
@@ -129,7 +129,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               onPressed: () => Navigator.pop(ctx), 
               child: const Text('Cancelar')
             ),
-            AppButton(
+            BotonGradiente(
               text: 'Confirmar Acceso',
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
@@ -265,7 +265,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               final user = _filteredUsers[index];
               return Opacity(
                 opacity: user.isActive ? 1.0 : 0.5,
-                child: AppCard(
+                child: TarjetaPremium(
                   padding: const EdgeInsets.all(4),
                   child: ListTile(
                     leading: Stack(

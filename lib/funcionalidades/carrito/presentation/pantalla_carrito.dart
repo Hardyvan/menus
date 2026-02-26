@@ -104,7 +104,7 @@ class _CartScreenState extends State<CartScreen> {
           const SizedBox(height: 24),
           SizedBox(
             width: 150,
-            child: AppButton(
+            child: BotonGradiente(
               text: 'Ir al Menú',
               onPressed: () => context.go('/menu'),
             ),
@@ -265,7 +265,7 @@ class _CartItemCard extends StatelessWidget {
     final theme = Theme.of(context);
     final provider = context.read<CartProvider>(); // Usamos read para acciones
 
-    return AppCard(
+    return TarjetaPremium(
       child: Padding(
         padding: const EdgeInsets.all(4.0), // Ajuste fino
         child: Row(
@@ -400,7 +400,7 @@ class _CartSummary extends StatelessWidget {
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
-              child: AppButton(
+              child: BotonGradiente(
                 text: 'CONFIRMAR PEDIDO',
                 isLoading: isSending,
                 onPressed: isSending ? null : onConfirm, // Deshabilitar si carga

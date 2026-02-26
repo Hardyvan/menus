@@ -1,5 +1,4 @@
 import 'package:provider/provider.dart';
-import 'package:menus/funcionalidades/configuracion/presentation/proveedor_tema.dart';
 import '../application/proveedor_autenticacion.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -24,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _isLoading = false;
-  bool _obscurePassword = true;
   bool _rememberMe = false; // Estado para "Guardar contraseña"
 
   @override
@@ -249,13 +247,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Semantics(
                                   label: 'Campo de usuario o correo',
                                   textField: true,
-                                  child: AppTextInput(
+                                  child: CampoTextoPersonalizado(
                                     label: 'Usuario o Correo',
                                     controller: _emailController,
                                     keyboardType: TextInputType.text, // Permitir texto libre
                                     prefixIcon: Icons.person_outline,
                                     textInputAction: TextInputAction.next,
-                                    autofillHints: const [AutofillHints.email, AutofillHints.username],
                                     // 🛡️ VALIDACIÓN RELAJADA
                                     validator: (v) {
                                       if (v == null || v.isEmpty) {
@@ -281,28 +278,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Semantics(
                                   label: 'Campo de contraseña',
                                   textField: true,
-                                  obscured: _obscurePassword,
-                                  child: AppTextInput(
+                                  child: CampoTextoPersonalizado(
                                     label: 'Contraseña',
                                     controller: _passwordController,
-                                    obscureText: _obscurePassword,
+                                    isPassword: true,
                                     prefixIcon: Icons.lock_outline,
                                     textInputAction: TextInputAction.done,
-                                    //onFieldSubmitted: (_) => _onLoginPressed(), // ENTER -> LOGIN
-                                    autofillHints: const [
-                                      AutofillHints.password
-                                    ],
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _obscurePassword
-                                            ? Icons.visibility_outlined
-                                            : Icons.visibility_off_outlined,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.5),
-                                      ),
-                                      onPressed: () => setState(() =>
-                                          _obscurePassword = !_obscurePassword),
-                                    ),
                                     validator: (v) => v?.isEmpty ?? true
                                         ? 'Requerido'
                                         : null,
@@ -338,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   button: true,
                                   label: 'Iniciar sesión',
                                   enabled: !_isLoading,
-                                  child: AppButton(
+                                  child: BotonGradiente(
                                     text: 'INICIAR SESIÓN',
                                     onPressed:
                                         _isLoading ? null : _onLoginPressed,
@@ -366,43 +347,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            // 3. Botón Flotante
-            Positioned(
-              top: 0,
-              right: 0,
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Semantics(
-                    button: true,
-                    label: 'Cambiar tema de la aplicación',
-                    child: FloatingActionButton.small(
-                      heroTag: 'theme_switcher',
-                      backgroundColor: colorScheme.surface,
-                      foregroundColor: colorScheme.primary,
-                      elevation: 2,
-                      onPressed: () {
-                        final themeProvider = context.read<ThemeProvider>();
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          builder: (context) => ThemeSelectorModal(
-                            currentThemeId: themeProvider.currentConfig.id,
-                            availableThemes: themeProvider.availablePalettes,
-                            onThemeSelected: (config) {
-                              themeProvider.setTheme(config);
-                              Navigator.pop(context);
-                            },
-                          ),
-                        );
-                      },
-                      child: const Icon(Icons.palette_outlined),
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
